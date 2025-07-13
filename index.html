@@ -239,6 +239,59 @@
             transform: translateY(0);
         }
 
+        /* Styles for active downloads section */
+        #activeDownloads {
+            width: 90%;
+            max-width: 600px;
+            background-color: #1e293b;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            border: 1px solid #334155;
+            margin-top: 2rem; /* Space above active downloads */
+            margin-bottom: 2rem; /* Space between downloads and results */
+        }
+        .download-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #475569;
+        }
+        .download-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .download-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #60a5fa; /* Blue for active downloads */
+            margin-bottom: 0.5rem;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #475569; /* Darker grey for empty part of bar */
+            border-radius: 0.25rem;
+            overflow: hidden;
+            height: 1rem;
+            margin-top: 0.5rem;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #10b981; /* Emerald green for progress */
+            border-radius: 0.25rem;
+            transition: width 0.3s ease-in-out;
+        }
+        .download-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .framed-section {
@@ -249,7 +302,7 @@
             .pole-image {
                 display: none; /* Hide poles on smaller screens */
             }
-            .container, #resultsContainer {
+            .container, #resultsContainer, #activeDownloads {
                 padding: 1rem;
             }
             .movie-item, .tvshow-item {
@@ -319,6 +372,15 @@
         </div>
     </div>
 
+    <!-- Active Downloads Container - Moved here -->
+    <div id="activeDownloads" class="hidden">
+        <h2 class="text-xl font-bold mb-4">Active Plunder Hauls</h2>
+        <p id="noActiveDownloads" class="no-results">No plunder being hauled in yet, matey!</p>
+        <div id="downloadList">
+            <!-- Active download items will be injected here -->
+        </div>
+    </div>
+
     <!-- Results Container -->
     <div id="resultsContainer" class="hidden">
         <!-- Moved serverResponseMessage here -->
@@ -353,7 +415,12 @@
         const movieSearchInput = document.getElementById('movieSearchInput');
         const tvShowsSelector = document.getElementById('tvShowsSelector');
 
+        const activeDownloadsContainer = document.getElementById('activeDownloads'); // Re-added
+        const downloadList = document.getElementById('downloadList'); // Re-added
+        const noActiveDownloadsMessage = document.getElementById('noActiveDownloads'); // Re-added
+
         let currentSearchType = '';
+        const activeDownloadIntervals = {}; // Re-added
 
         /**
          * Toggles the visibility of search areas and updates active selector buttons
@@ -516,6 +583,7 @@
 
         /**
          * Sends a magnet link (and optionally a detail page URL for scraping) to the backend server.
+         * Also initiates simulated download progress tracking.
          * @param {string} magnetLink - The magnet link to send.
          * @param {string} source - The source of the torrent (e.g., 'yts', '1337x').
          * @param {string|null} detailPageUrl - Optional URL for scraping magnet link from 1337x.
@@ -531,8 +599,7 @@
                 return;
             }
 
-            // Show success message immediately upon click
-            showMessage("Yer bounty will be deposited to the vault shortly!", 'success');
+            // Moved showMessage to after simulated download completes
 
             let finalMagnetLink = magnetLink;
 
@@ -581,12 +648,104 @@
                 }
 
                 const result = await response.json();
-                // No more torrentId handling or progress tracking here
+                // For simulated progress, we generate a unique ID here
+                const torrentId = `simulated-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+                
+                // Start tracking simulated progress for this download
+                addDownloadToTracker(torrentId, title);
 
             } catch (error) {
                 console.error('Error sending magnet link to backend:', error);
                 showMessage(`Failed to connect to your server or server error: ${error.message}. Ensure your backend is running and the ngrok URL is correct.`, 'error');
             }
+        }
+
+        /**
+         * Adds a new download item to the active downloads list and starts polling for its simulated progress.
+         * @param {string} torrentId - A unique ID for the simulated torrent.
+         * @param {string} title - The title of the content.
+         */
+        function addDownloadToTracker(torrentId, title) {
+            noActiveDownloadsMessage.classList.add('hidden'); // Hide "No plunder" message
+            activeDownloadsContainer.classList.remove('hidden'); // Show the active downloads container
+
+            // Prevent adding duplicate entries if already tracking this torrent
+            if (document.getElementById(`download-${torrentId}`)) {
+                console.log(`Torrent ${torrentId} is already being tracked.`);
+                return;
+            }
+
+            const downloadItem = document.createElement('div');
+            downloadItem.className = 'download-item';
+            downloadItem.id = `download-${torrentId}`;
+            downloadItem.innerHTML = `
+                <div class="download-title">${title}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 0%;"></div>
+                </div>
+                <div class="download-info">
+                    <span class="progress-text">0%</span>
+                    <span class="status-text">Initiating...</span>
+                    <span class="speed-text">0 KB/s</span>
+                </div>
+            `;
+            downloadList.prepend(downloadItem); // Add to the top of the list
+
+            // Start polling for this download's progress
+            startPollingForProgress(torrentId, downloadItem);
+        }
+
+        /**
+         * Starts a polling interval for a specific download to update its simulated progress.
+         * @param {string} torrentId - The unique ID of the torrent.
+         * @param {HTMLElement} downloadItemElement - The DOM element representing this download.
+         */
+        function startPollingForProgress(torrentId, downloadItemElement) {
+            let simulatedProgress = 0;
+            let simulatedSpeed = 0;
+            let currentStatus = 'Downloading';
+
+            const progressBar = downloadItemElement.querySelector('.progress-bar');
+            const progressText = downloadItemElement.querySelector('.progress-text');
+            const statusText = downloadItemElement.querySelector('.status-text');
+            const speedText = downloadItemElement.querySelector('.speed-text');
+
+            // Store the interval ID to clear it later
+            activeDownloadIntervals[torrentId] = setInterval(async () => {
+                // --- SIMULATED PROGRESS ---
+                if (simulatedProgress < 100) {
+                    simulatedProgress += Math.floor(Math.random() * 10) + 1; // Increment by 1-10%
+                    if (simulatedProgress > 100) simulatedProgress = 100;
+                    simulatedSpeed = (Math.random() * 5 + 0.5).toFixed(1); // 0.5 to 5.5 MB/s
+                } else {
+                    currentStatus = 'Completed';
+                    simulatedSpeed = 0;
+                }
+
+                // Update UI
+                progressBar.style.width = `${simulatedProgress}%`;
+                progressText.textContent = `${simulatedProgress}%`;
+                statusText.textContent = currentStatus;
+                speedText.textContent = `${simulatedSpeed} MB/s`;
+
+                if (simulatedProgress >= 100 || currentStatus === 'Completed' || currentStatus === 'Error') {
+                    clearInterval(activeDownloadIntervals[torrentId]);
+                    delete activeDownloadIntervals[torrentId]; // Clean up interval tracker
+                    statusText.textContent = 'Completed, arrr!';
+                    speedText.textContent = '0 MB/s';
+                    // Show the success message AFTER the simulated download completes
+                    showMessage("Yer bounty will be deposited to the vault shortly!", 'success');
+                    // Optionally remove the item after a delay or change its appearance
+                    setTimeout(() => {
+                        downloadItemElement.remove();
+                        // If no more active downloads, show "No plunder" message
+                        if (Object.keys(activeDownloadIntervals).length === 0) {
+                            noActiveDownloadsMessage.classList.remove('hidden');
+                            activeDownloadsContainer.classList.add('hidden'); // Hide container if empty
+                        }
+                    }, 5000); // Remove after 5 seconds
+                }
+            }, 1500); // Poll every 1.5 seconds
         }
 
         // Event listeners for Enter key on the movie search input
@@ -608,6 +767,11 @@
         // This ensures a clean initial state.
         document.addEventListener('DOMContentLoaded', () => {
             showSearchType(''); // Call with empty string to hide all and remove active classes
+            // Ensure active downloads container is hidden initially if no downloads
+            if (downloadList.children.length === 0) {
+                activeDownloadsContainer.classList.add('hidden');
+                noActiveDownloadsMessage.classList.remove('hidden');
+            }
         });
     </script>
 </body>
