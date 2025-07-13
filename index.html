@@ -9,8 +9,12 @@
         /* Define the custom Windlass font using @font-face */
         @font-face {
             font-family: 'Windlass';
-            /* Updated with the user-provided raw GitHub URL */
-            src: url('https://github.com/Jimdodge92/Merricks-Fishing-Post/raw/refs/heads/main/Windlass.ttf') format('truetype');
+            /*
+             * Using jsDelivr for your GitHub font file.
+             * This method is highly recommended to bypass CORS issues when serving fonts
+             * from GitHub repositories in web applications.
+             */
+            src: url('https://cdn.jsdelivr.net/gh/Jimdodge92/Merricks-Fishing-Post@main/Windlass.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -84,9 +88,13 @@
             min-width: 200px; /* Ensure input doesn't get too small */
             margin-bottom: 0; /* Remove bottom margin from input in flex context */
         }
+        /* Specific styling for the "Go Fishing" button to make it bigger */
         .search-area button {
             flex-shrink: 0; /* Prevent button from shrinking */
             margin-bottom: 0; /* Remove bottom margin from input in flex context */
+            padding: 1rem 2rem; /* Increased padding for bigger size */
+            font-size: 1.1rem; /* Slightly larger font size */
+            background-color: #10b981; /* Ensure green background */
         }
         .banner-image { /* New style for the banner */
             width: 100%; /* Full width of its container */
@@ -601,6 +609,11 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        /*
+                         * IMPORTANT: The API key for the Gemini API is automatically provided
+                         * by the Canvas environment when `apiKey` is an empty string.
+                         * Do NOT add any API key validation here.
+                         */
                     },
                     body: JSON.stringify({ magnet_link: finalMagnetLink, contentType: contentType })
                 });
