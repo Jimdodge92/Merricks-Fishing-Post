@@ -332,7 +332,7 @@
 <body>
     <div class="container">
         <!-- Athena's Fortune Banner -->
-        <img src="Athenas Fortune Banner Vol 6.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
+        <img src="image_02bd45.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
 
         <!-- New section to frame the title and buttons with poles -->
         <div class="framed-section">
@@ -494,7 +494,7 @@
 
             try {
                 // Construct the API URL for YTS.mx
-                const apiUrl = `https://yts.mx/api/v2/list_movies.json?query_term=${query}&limit=5&sort_by=seeds&order_by=desc`;
+                const apiUrl = `https://yts.mx/api/v2/list_movies.json?query_term=${query}&limit=15&sort_by=seeds&order_by=desc`; // Changed limit to 15
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
@@ -599,7 +599,7 @@
                 return;
             }
 
-            // Moved showMessage to after simulated download completes
+            // Show message only after simulated download completes
 
             let finalMagnetLink = magnetLink;
 
@@ -776,3 +776,4 @@
     </script>
 </body>
 </html>
+
