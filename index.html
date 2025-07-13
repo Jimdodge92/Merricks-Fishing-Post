@@ -6,8 +6,18 @@
     <title>Merrick's Fishing Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Define the custom Windlass font using @font-face */
+        @font-face {
+            font-family: 'Windlass';
+            /* IMPORTANT: Replace 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/' with your actual GitHub username and the correct path */
+            /* Example: src: url('https://cdn.jsdelivr.net/gh/YourUsername/YourRepoName/fonts/Windlass.ttf') format('truetype'); */
+            src: url('https://cdn.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/Windlass.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Windlass', cursive; /* Use the custom Windlass font */
             background-color: #0f172a; /* Deep dark blue for sea theme */
             display: flex;
             flex-direction: column;
@@ -26,8 +36,28 @@
             width: 90%;
             max-width: 600px;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2rem; /* Space below the main container */
             border: 1px solid #334155; /* Subtle border */
+            display: flex; /* Make container a flex container */
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center items horizontally */
+        }
+        /* New wrapper for the poles and the central content (title, buttons) */
+        .framed-section {
+            display: flex;
+            align-items: flex-start; /* Align poles and central content to the top */
+            justify-content: center;
+            width: 100%; /* Take full width of parent container */
+            gap: 1rem; /* Space between poles and central content */
+            margin-bottom: 1.5rem; /* Space below this section */
+        }
+        /* Styles for the content between the poles */
+        .central-content {
+            flex-grow: 1; /* Allow this content to take available space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         input[type="text"], input[type="url"] {
             width: calc(100% - 2rem);
@@ -67,6 +97,9 @@
             border-radius: 0.75rem; /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Stronger shadow for banner */
             border: 2px solid #f59e0b; /* Golden border */
+            display: block; /* Ensure it's a block element for margin: auto to work */
+            margin-left: auto; /* Center the image within its parent */
+            margin-right: auto; /* Center the image within its parent */
         }
         .selection-message { /* New style for the selection message */
             font-size: 1.1rem;
@@ -218,7 +251,7 @@
             background-color: #059669; /* Darker emerald for success */
         }
         .message-box.error {
-                background-color: #dc2626; /* Stronger red for error */
+            background-color: #dc2626; /* Stronger red for error */
         }
         .sabotage-message { /* Style for the new message */
             color: #dc2626; /* Red for emphasis */
@@ -228,8 +261,25 @@
             text-align: center;
         }
 
+        /* Styling for the new pole images */
+        .pole-image {
+            height: 150px; /* Adjusted height to better frame the title/buttons */
+            width: auto; /* Maintain aspect ratio */
+            object-fit: contain;
+            flex-shrink: 0; /* Prevent poles from shrinking */
+            /* Removed specific margin-left/right as gap handles spacing */
+        }
+
         /* Responsive adjustments */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .framed-section {
+                flex-direction: column; /* Stack poles and central content vertically */
+                gap: 0; /* Remove gap when stacked */
+                align-items: center; /* Center items when stacked */
+            }
+            .pole-image {
+                display: none; /* Hide poles on smaller screens */
+            }
             .container, #resultsContainer {
                 padding: 1rem;
             }
@@ -258,33 +308,47 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="Athenas Fortune Banner Vol 6.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
-        <h1 class="text-2xl font-bold mb-4">Merrick's Fishing Post</h1>
-
-        <p class="selection-message">Choose yer bounty, matey!</p>
-        <div class="selector-buttons">
-            <button id="moviesSelector" onclick="showSearchType('movies')">Movies (Aye, Flicks!)</button>
-            <button id="tvShowsSelector" onclick="showSearchType('tvshows')">TV Shows (Aye, Series!)</button>
-        </div>
-
-        <div id="movieSearchArea" class="search-area hidden">
-            <input type="text" id="movieSearchInput" placeholder="What movies be ye fishin' for?">
-            <button onclick="searchMovies()">Go Fishing</button>
-        </div>
-
-        <!-- TV Show Search Area now only displays a message -->
-        <div id="tvShowSearchArea" class="search-area hidden">
-            <p class="sabotage-message">Sorry mate, some skelly's sabotaged the TV show search, the captain is working to repair this soon!</p>
-        </div>
-
-        <p class="info-message">
-            Cast your line into the cinematic waters and see what treasures you reel in!
-        </p>
-    </div>
-
-    <!-- Moved serverResponseMessage outside the main container for global messages -->
+    <!-- Server response message box, positioned globally -->
     <div id="serverResponseMessage" class="message-box hidden"></div>
+
+    <div class="container">
+        <!-- Athena's Fortune Banner -->
+        <img src="Athenas Fortune Banner Vol 6.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
+
+        <!-- New section to frame the title and buttons with poles -->
+        <div class="framed-section">
+            <!-- Left pole image -->
+            <img src="Pole_left.png" alt="Left Pole" class="pole-image" onerror="this.onerror=null;this.src='https://placehold.co/50x150/0f172a/e2e8f0?text=Left+Pole';">
+
+            <!-- Central content including title, selectors, search areas -->
+            <div class="central-content">
+                <h1 class="text-2xl font-bold mb-4">Merrick's Fishing Post</h1>
+
+                <p class="selection-message">Choose yer bounty, matey!</p>
+                <div class="selector-buttons">
+                    <button id="moviesSelector" onclick="showSearchType('movies')">Movies</button>
+                    <button id="tvShowsSelector" onclick="showSearchType('tvshows')">TV Shows</button>
+                </div>
+
+                <div id="movieSearchArea" class="search-area hidden">
+                    <input type="text" id="movieSearchInput" placeholder="What movies be ye fishin' for?">
+                    <button onclick="searchMovies()">Go Fishing</button>
+                </div>
+
+                <!-- TV Show Search Area now only displays a message -->
+                <div id="tvShowSearchArea" class="search-area hidden">
+                    <p class="sabotage-message">Sorry mate, some skelly's sabotaged the TV show search, the captain is working to repair this soon!</p>
+                </div>
+
+                <p class="info-message">
+                    Cast your line into the cinematic waters and see what treasures you reel in!
+                </p>
+            </div>
+
+            <!-- Right pole image -->
+            <img src="Pole_right.png" alt="Right Pole" class="pole-image" onerror="this.onerror=null;this.src='https://placehold.co/50x150/0f172a/e2e8f0?text=Right+Pole';">
+        </div>
+    </div>
 
     <div id="resultsContainer" class="hidden">
         <h2 class="text-xl font-bold mb-4">Reeled In...</h2>
@@ -296,10 +360,10 @@
     </div>
 
     <div style="display:none;">
-        <input type="url" id="backendUrlInput" value="https://c9399bcd2a08.ngrok-free.app/fetch-torrent-metadata">
-        <input type="url" id="eztvBackendUrlInput" value="https://c9399bcd2a08.ngrok-free.app/search-1337x-tv">
-        <input type="url" id="scrapeMagnetBackendUrlInput" value="https://c9399bcd2a08.ngrok-free.app/scrape-1337x-magnet">
-        <!-- The serverResponseMessage was here before -->
+        <!-- IMPORTANT: You need to set these URLs for the app to function correctly. -->
+        <input type="url" id="backendUrlInput" value="">
+        <input type="url" id="eztvBackendUrlInput" value="">
+        <input type="url" id="scrapeMagnetBackendUrlInput" value="">
     </div>
 
     <script>
@@ -321,41 +385,62 @@
 
         let currentSearchType = '';
 
+        /**
+         * Toggles the visibility of search areas and updates active selector buttons
+         * based on the selected content type (movies or TV shows).
+         * @param {string} type - The type of content to search for ('movies' or 'tvshows').
+         */
         function showSearchType(type) {
             currentSearchType = type;
+            // Clear previous results and hide messages
             movieResultsDiv.innerHTML = '';
             resultsContainer.classList.add('hidden');
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden'); // Hide any previous messages
 
+            // Hide both search areas initially
             movieSearchArea.classList.add('hidden');
-            tvShowSearchArea.classList.add('hidden'); // Ensure TV show area is hidden initially
+            tvShowSearchArea.classList.add('hidden');
+            
+            // Deactivate all selector buttons
             moviesSelector.classList.remove('active');
             tvShowsSelector.classList.remove('active');
 
+            // Show the relevant search area and activate its button
             if (type === 'movies') {
                 movieSearchArea.classList.remove('hidden');
                 moviesSelector.classList.add('active');
-                movieSearchInput.focus();
+                movieSearchInput.focus(); // Focus on the input for convenience
             } else if (type === 'tvshows') {
-                tvShowSearchArea.classList.remove('hidden'); // Show the TV show area
+                tvShowSearchArea.classList.remove('hidden'); // Show the TV show area (with the sabotage message)
                 tvShowsSelector.classList.add('active');
             }
         }
 
+        /**
+         * Displays a temporary message to the user.
+         * @param {string} message - The message to display.
+         * @param {string} type - The type of message ('info', 'success', 'error').
+         */
         function showMessage(message, type = 'info') {
             serverResponseMessage.textContent = message;
-            serverResponseMessage.className = `message-box ${type}`;
-            serverResponseMessage.classList.remove('hidden');
+            serverResponseMessage.className = `message-box ${type}`; // Apply base and type-specific classes
+            serverResponseMessage.classList.remove('hidden'); // Make the message box visible
+            // Hide the message after 6 seconds
             setTimeout(() => {
                 serverResponseMessage.classList.add('hidden');
             }, 6000);
         }
 
+        /**
+         * Initiates a movie search using the YTS.mx API based on user input.
+         * Displays results or appropriate messages (loading, no results, error).
+         */
         async function searchMovies() {
             const query = encodeURIComponent(movieSearchInput.value.trim());
 
+            // Clear previous results and hide all messages before a new search
             movieResultsDiv.innerHTML = '';
             resultsContainer.classList.add('hidden');
             loadingMessage.classList.add('hidden');
@@ -364,26 +449,31 @@
 
             if (!query) {
                 console.log("Movie search query cannot be empty.");
+                // Optionally show a message to the user here, e.g., showMessage("Please enter a movie title.", "info");
                 return;
             }
 
-            loadingMessage.classList.remove('hidden');
-            resultsContainer.classList.remove('hidden');
+            loadingMessage.classList.remove('hidden'); // Show loading message
+            resultsContainer.classList.remove('hidden'); // Show results container (even if empty initially)
 
             try {
+                // Construct the API URL for YTS.mx
                 const apiUrl = `https://yts.mx/api/v2/list_movies.json?query_term=${query}&limit=5&sort_by=seeds&order_by=desc`;
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
-                loadingMessage.classList.add('hidden');
+                loadingMessage.classList.add('hidden'); // Hide loading message once data is received
 
+                // Check if the API call was successful and movies were found
                 if (data.status === 'ok' && data.data && data.data.movies && data.data.movies.length > 0) {
                     data.data.movies.forEach(movie => {
                         const movieItem = document.createElement('div');
                         movieItem.className = 'movie-item';
 
+                        // Use a placeholder image if no poster is available
                         const posterUrl = movie.medium_cover_image || 'https://placehold.co/80x120/3182ce/ffffff?text=No+Poster';
 
+                        // Populate movie item with details
                         movieItem.innerHTML = `
                             <img src="${posterUrl}" alt="${movie.title_english} poster" class="movie-poster" onerror="this.onerror=null;this.src='https://placehold.co/80x120/3182ce/ffffff?text=No+Poster';">
                             <div class="movie-details">
@@ -391,43 +481,60 @@
                                 <div class="movie-year">Year: ${movie.year}</div>
                                 <div class="action-buttons">
                                     ${movie.torrents && movie.torrents.length > 0 ?
+                                        // Display "Fetch Plunder" button if torrents exist
                                         `<button class="fetch-server-button" data-magnet-link="${movie.torrents[0].url}" data-source="yts" data-content-type="movie">Fetch Plunder (${movie.torrents[0].quality})</button>` :
+                                        // Display message if no torrents
                                         `<p class="text-sm text-red-400">No torrents available</p>`
                                     }
                                 </div>
                             </div>
                         `;
-                        movieResultsDiv.appendChild(movieItem);
+                        movieResultsDiv.appendChild(movieItem); // Add movie item to results container
                     });
 
+                    // Add event listeners to all "Fetch Plunder" buttons
                     document.querySelectorAll('.fetch-server-button').forEach(button => {
                         button.addEventListener('click', (event) => {
                             const magnetLink = event.target.dataset.magnetLink;
                             const source = event.target.dataset.source;
                             const contentType = event.target.dataset.contentType;
-                            sendMagnetToServer(magnetLink, source, null, contentType);
+                            sendMagnetToServer(magnetLink, source, null, contentType); // Pass null for detailPageUrl for YTS
                         });
                     });
 
                 } else {
-                    noResultsMessage.classList.remove('hidden');
+                    noResultsMessage.classList.remove('hidden'); // Show no results message
                 }
             } catch (error) {
-                loadingMessage.classList.add('hidden');
-                noResultsMessage.classList.remove('hidden');
+                loadingMessage.classList.add('hidden'); // Hide loading message
+                noResultsMessage.classList.remove('hidden'); // Show no results message on error
                 console.error('Error fetching data from YTS.mx API:', error);
+                showMessage("Ahoy! Couldn't reach the YTS.mx seas. Check your connection or try again later.", 'error');
             }
         }
 
+        /**
+         * Placeholder function for TV show search. Currently displays a sabotage message.
+         */
         async function searchTVShows() {
-            movieResultsDiv.innerHTML = '';
+            // Clear previous results and hide all messages
+            movieResultsDiv.innerHTML = ''; // Re-using movieResultsDiv for TV shows too
             resultsContainer.classList.add('hidden');
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden');
+            // The sabotage message is already displayed in the HTML for tvShowSearchArea
         }
 
 
+        /**
+         * Sends a magnet link (and optionally a detail page URL for scraping) to the backend server.
+         * Displays success or error messages based on the server's response.
+         * @param {string} magnetLink - The magnet link to send.
+         * @param {string} source - The source of the torrent (e.g., 'yts', '1337x').
+         * @param {string|null} detailPageUrl - Optional URL for scraping magnet link from 1337x.
+         * @param {string} contentType - The type of content ('movie' or 'tvshow').
+         */
         async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType) {
             const fetchTorrentMetadataUrl = backendUrlInput.value.trim();
             const scrapeMagnetUrl = scrapeMagnetBackendUrlInput.value.trim();
@@ -437,11 +544,12 @@
                 return;
             }
 
-            // Show success message immediately upon click
+            // Show success message immediately upon click, assuming it will be sent
             showMessage("Yer bounty will be deposited to the vault shortly!", 'success');
 
             let finalMagnetLink = magnetLink;
 
+            // If the source is 1337x and a detail page URL is provided, scrape the magnet link first
             if (source === '1337x' && detailPageUrl) {
                 try {
                     const response = await fetch(scrapeMagnetUrl, {
@@ -467,15 +575,17 @@
                 } catch (error) {
                     console.error('Error in 1337x magnet scraping step:', error);
                     showMessage(`Failed to get 1337x magnet: ${error.message}`, 'error');
-                    return;
+                    return; // Stop execution if scraping fails
                 }
             }
 
+            // If after scraping (or if not scraping), there's no final magnet link, show error
             if (!finalMagnetLink) {
                 showMessage("No magnet link available to fetch.", 'error');
                 return;
             }
 
+            // Send the final magnet link to the backend for processing
             try {
                 const response = await fetch(fetchTorrentMetadataUrl, {
                     method: 'POST',
@@ -491,6 +601,8 @@
                 }
 
                 const result = await response.json();
+                // If the server processes it successfully, the initial success message remains.
+                // If you wanted to show a different message based on server's specific success, you'd do it here.
 
             } catch (error) {
                 console.error('Error sending magnet link to backend:', error);
@@ -498,21 +610,26 @@
             }
         }
 
-        // Event listeners for Enter key on both search inputs
+        // Event listeners for Enter key on the movie search input
         movieSearchInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 searchMovies();
             }
         });
 
+        // Event listener for Enter key on the TV show search input (currently does nothing as per sabotage message)
         tvShowSearchInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault();
+                event.preventDefault(); // Prevent default form submission behavior
             }
         });
 
-        // Initially hide both search areas and show no active selector
+        // Initially hide both search areas and show no active selector.
         // The user must make a selection first.
+        // This ensures a clean initial state.
+        document.addEventListener('DOMContentLoaded', () => {
+            showSearchType(''); // Call with empty string to hide all and remove active classes
+        });
     </script>
 </body>
 </html>
