@@ -9,8 +9,16 @@
         /* Define the custom Windlass font using @font-face */
         @font-face {
             font-family: 'Windlass';
-            /* IMPORTANT: Replace 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/' with your actual GitHub username and the correct path */
-            /* Example: src: url('https://cdn.jsdelivr.net/gh/YourUsername/YourRepoName/fonts/Windlass.ttf') format('truetype'); */
+            /*
+             * IMPORTANT: Replace 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/'
+             * with your actual GitHub username and the correct path to your font file.
+             *
+             * Recommended format using jsDelivr to avoid CORS issues:
+             * src: url('https://cdn.jsdelivr.net/gh/YourUsername/YourRepoName/fonts/Windlass.ttf') format('truetype');
+             *
+             * Or, if using the direct raw GitHub link (may cause CORS issues):
+             * src: url('https://raw.githubusercontent.com/YourUsername/YourRepoName/main/path/to/Windlass.ttf') format('truetype');
+             */
             src: url('https://cdn.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/Windlass.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
