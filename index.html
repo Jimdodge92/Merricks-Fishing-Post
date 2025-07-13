@@ -442,6 +442,31 @@
                         // Use a placeholder image if no poster is available
                         const posterUrl = movie.medium_cover_image || 'https://placehold.co/80x120/3182ce/ffffff?text=No+Poster';
 
+                        // Build buttons for each torrent quality
+                        let torrentButtonsHtml = '';
+                        if (movie.torrents && movie.torrents.length > 0) {
+                            movie.torrents.sort((a, b) => {
+                                // Sort by quality: 720p, 1080p, 2160p, 3D, then by seeds
+                                const qualityOrder = { '720p': 1, '1080p': 2, '2160p': 3, '3D': 4 };
+                                const qualityA = qualityOrder[a.quality] || 99;
+                                const qualityB = qualityOrder[b.quality] || 99;
+                                if (qualityA !== qualityB) return qualityA - qualityB;
+                                return b.seeds - a.seeds; // Then by seeds (higher first)
+                            });
+
+                            torrentButtonsHtml = movie.torrents.map(torrent => `
+                                <button class="fetch-server-button"
+                                        data-magnet-link="${torrent.url}"
+                                        data-source="yts"
+                                        data-content-type="movie"
+                                        data-title="${movie.title_english}">
+                                    Fetch Plunder (${torrent.quality})
+                                </button>
+                            `).join('');
+                        } else {
+                            torrentButtonsHtml = `<p class="text-sm text-red-400">No torrents available</p>`;
+                        }
+
                         // Populate movie item with details
                         movieItem.innerHTML = `
                             <img src="${posterUrl}" alt="${movie.title_english} poster" class="movie-poster" onerror="this.onerror=null;this.src='https://placehold.co/80x120/3182ce/ffffff?text=No+Poster';">
@@ -449,12 +474,7 @@
                                 <div class="movie-title">${movie.title_english}</div>
                                 <div class="movie-year">Year: ${movie.year}</div>
                                 <div class="action-buttons">
-                                    ${movie.torrents && movie.torrents.length > 0 ?
-                                        // Display "Fetch Plunder" button if torrents exist
-                                        `<button class="fetch-server-button" data-magnet-link="${movie.torrents[0].url}" data-source="yts" data-content-type="movie" data-title="${movie.title_english}">Fetch Plunder (${movie.torrents[0].quality})</button>` :
-                                        // Display message if no torrents
-                                        `<p class="text-sm text-red-400">No torrents available</p>`
-                                    }
+                                    ${torrentButtonsHtml}
                                 </div>
                             </div>
                         `;
