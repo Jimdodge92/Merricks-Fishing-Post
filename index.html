@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merrick's Fishing Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Deep dark blue for sea theme */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            color: #e2e8f0; /* Off-white text */
+        }
+        .container {
+            background-color: #1e293b; /* Slightly lighter dark blue for container */
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 1px solid #334155; /* Subtle border */
+        }
+        input[type="text"], input[type="url"] {
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #475569; /* Darker border */
+            border-radius: 0.5rem;
+            background-color: #1f2937; /* Darker input background */
+            color: #e2e8f0;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus, input[type="url"]:focus {
+            border-color: #60a5fa; /* Vibrant blue on focus */
+        }
+        .search-area { /* Flex container for input, button */
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 1rem; /* Space between items */
+            align-items: center;
+            justify-content: center;
+        }
+        .search-area input {
+            flex-grow: 1; /* Allow input to take available space */
+            min-width: 200px; /* Ensure input doesn't get too small */
+            margin-bottom: 0; /* Remove bottom margin from input in flex context */
+        }
+        .search-area button {
+            flex-shrink: 0; /* Prevent button from shrinking */
+            margin-bottom: 0; /* Remove bottom margin from button in flex context */
+        }
+        .banner-image { /* New style for the banner */
+            width: 100%; /* Full width of its container */
+            max-width: 600px; /* Max width to match container */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 1.5rem; /* Space below the banner */
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Stronger shadow for banner */
+            border: 2px solid #f59e0b; /* Golden border */
+        }
+        .selection-message { /* New style for the selection message */
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #f59e0b; /* Golden color */
+            margin-bottom: 1rem;
+        }
+        .selector-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .selector-buttons button {
+            background-color: #475569; /* Slate gray for inactive selector */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 0.8rem 1.8rem; /* Increased padding */
+        }
+        .selector-buttons button.active {
+            background-color: #10b981; /* Emerald green for active selector */
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+        }
+        button {
+            background-color: #10b981; /* Emerald green button */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background-color: #059669; /* Darker emerald on hover */
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .info-message {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #94a3b8; /* Slate gray for info */
+        }
+        #resultsContainer {
+            width: 90%;
+            max-width: 600px;
+            background-color: #1e293b; /* Consistent container background */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            border: 1px solid #334155; /* Subtle border */
+        }
+        .movie-item, .tvshow-item { /* Combined styling for results */
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #475569; /* Separator */
+        }
+        .movie-item:last-child, .tvshow-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .movie-poster, .tvshow-poster { /* Combined styling for posters */
+            width: 80px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .movie-details, .tvshow-details { /* Combined styling for details */
+            flex-grow: 1;
+        }
+        .movie-title, .tvshow-title { /* Combined styling for titles */
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #f59e0b; /* Golden title */
+            margin-bottom: 0.25rem;
+        }
+        .movie-year, .tvshow-season-episode { /* Combined styling for year/season-episode */
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .fetch-server-button {
+            background-color: #d97706; /* Amber/Orange for "Fetch Plunder" */
+            color: white;
+            padding: 0.5rem 1rem; /* Adjusted padding */
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-block;
+            transition: background-color 0.2s, transform 0.1s;
+            cursor: pointer;
+            border: none;
+            flex-grow: 1;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        .fetch-server-button:hover {
+            background-color: #b45309; /* Darker amber on hover */
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .no-results {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+        }
+        .loading-message {
+            text-align: center;
+            color: #60a5fa; /* Blue for loading */
+            font-style: italic;
+            margin-top: 1rem;
+        }
+        .message-box {
+            background-color: #334155; /* Darker gray for messages */
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: block; /* Ensure it's block-level for visibility */
+            width: 90%; /* Match container width */
+            max-width: 600px; /* Match container max-width */
+            margin-left: auto; /* Center it */
+            margin-right: auto; /* Center it */
+        }
+        .message-box.success {
+            background-color: #059669; /* Darker emerald for success */
+        }
+        .message-box.error {
+                background-color: #dc2626; /* Stronger red for error */
+        }
+        .sabotage-message { /* Style for the new message */
+            color: #dc2626; /* Red for emphasis */
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .container, #resultsContainer {
+                padding: 1rem;
+            }
+            .movie-item, .tvshow-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .movie-poster, .tvshow-poster {
+                margin-right: 0;
+                margin-bottom: 0.75rem;
+            }
+            .movie-title, .tvshow-title {
+                font-size: 1.1rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .search-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            .search-area input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="Athenas Fortune Banner Vol 6.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
+        <h1 class="text-2xl font-bold mb-4">Merrick's Fishing Post</h1>
+
+        <p class="selection-message">Choose yer bounty, matey!</p>
+        <div class="selector-buttons">
+            <button id="moviesSelector" onclick="showSearchType('movies')">Movies (Aye, Flicks!)</button>
+            <button id="tvShowsSelector" onclick="showSearchType('tvshows')">TV Shows (Aye, Series!)</button>
+        </div>
+
+        <div id="movieSearchArea" class="search-area hidden">
+            <input type="text" id="movieSearchInput" placeholder="What movies be ye fishin' for?">
+            <button onclick="searchMovies()">Go Fishing</button>
+        </div>
+
+        <!-- TV Show Search Area now only displays a message -->
+        <div id="tvShowSearchArea" class="search-area hidden">
+            <p class="sabotage-message">Sorry mate, some skelly's sabotaged the TV show search, the captain is working to repair this soon!</p>
+        </div>
+
+        <p class="info-message">
+            Cast your line into the cinematic waters and see what treasures you reel in!
+        </p>
+    </div>
+
+    <!-- Moved serverResponseMessage outside the main container for global messages -->
+    <div id="serverResponseMessage" class="message-box hidden"></div>
+
+    <div id="resultsContainer" class="hidden">
+        <h2 class="text-xl font-bold mb-4">Reeled In...</h2>
+        <div id="movieResults">
+            <!-- Movie/TV Show results will be injected here -->
+        </div>
+        <p id="loadingMessage" class="loading-message hidden">Casting the net...</p>
+        <p id="noResultsMessage" class="no-results hidden">No treasure found in these waters. Try a different bait!</p>
+    </div>
+
+    <div style="display:none;">
+        <input type="url" id="backendUrlInput" value="https://57e4e891af7a.ngrok-free.app/fetch-torrent-metadata">
+        <input type="url" id="eztvBackendUrlInput" value="https://57e4e891af7a.ngrok-free.app/search-1337x-tv">
+        <input type="url" id="scrapeMagnetBackendUrlInput" value="https://57e4e891af7a.ngrok-free.app/scrape-1337x-magnet">
+        <!-- The serverResponseMessage was here before -->
+    </div>
+
+    <script>
+        const resultsContainer = document.getElementById('resultsContainer');
+        const movieResultsDiv = document.getElementById('movieResults');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const backendUrlInput = document.getElementById('backendUrlInput');
+        const eztvBackendUrlInput = document.getElementById('eztvBackendUrlInput');
+        const scrapeMagnetBackendUrlInput = document.getElementById('scrapeMagnetBackendUrlInput');
+        const serverResponseMessage = document.getElementById('serverResponseMessage');
+
+        const movieSearchArea = document.getElementById('movieSearchArea');
+        const tvShowSearchArea = document.getElementById('tvShowSearchArea');
+        const movieSearchInput = document.getElementById('movieSearchInput');
+        const tvShowSearchInput = document.getElementById('tvShowSearchInput'); // Still exists but not used for input
+        const moviesSelector = document.getElementById('moviesSelector');
+        const tvShowsSelector = document.getElementById('tvShowsSelector');
+
+        let currentSearchType = '';
+
+        function showSearchType(type) {
+            currentSearchType = type;
+            movieResultsDiv.innerHTML = '';
+            resultsContainer.classList.add('hidden');
+            loadingMessage.classList.add('hidden');
+            noResultsMessage.classList.add('hidden');
+            serverResponseMessage.classList.add('hidden'); // Hide any previous messages
+
+            movieSearchArea.classList.add('hidden');
+            tvShowSearchArea.classList.add('hidden'); // Ensure TV show area is hidden initially
+            moviesSelector.classList.remove('active');
+            tvShowsSelector.classList.remove('active');
+
+            if (type === 'movies') {
+                movieSearchArea.classList.remove('hidden');
+                moviesSelector.classList.add('active');
+                movieSearchInput.focus();
+            } else if (type === 'tvshows') {
+                tvShowSearchArea.classList.remove('hidden'); // Show the TV show area
+                tvShowsSelector.classList.add('active');
+            }
+        }
+
+        function showMessage(message, type = 'info') {
+            serverResponseMessage.textContent = message;
+            serverResponseMessage.className = `message-box ${type}`;
+            serverResponseMessage.classList.remove('hidden');
+            setTimeout(() => {
+                serverResponseMessage.classList.add('hidden');
+            }, 6000);
+        }
+
+        async function searchMovies() {
+            const query = encodeURIComponent(movieSearchInput.value.trim());
+
+            movieResultsDiv.innerHTML = '';
+            resultsContainer.classList.add('hidden');
+            loadingMessage.classList.add('hidden');
+            noResultsMessage.classList.add('hidden');
+            serverResponseMessage.classList.add('hidden');
+
+            if (!query) {
+                console.log("Movie search query cannot be empty.");
+                return;
+            }
+
+            loadingMessage.classList.remove('hidden');
+            resultsContainer.classList.remove('hidden');
+
+            try {
+                const apiUrl = `https://yts.mx/api/v2/list_movies.json?query_term=${query}&limit=5&sort_by=seeds&order_by=desc`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                loadingMessage.classList.add('hidden');
+
+                if (data.status === 'ok' && data.data && data.data.movies && data.data.movies.length > 0) {
+                    data.data.movies.forEach(movie => {
+                        const movieItem = document.createElement('div');
+                        movieItem.className = 'movie-item';
+
+                        const posterUrl = movie.medium_cover_image || 'https://placehold.co/80x120/3182ce/ffffff?text=No+Poster';
+
+                        movieItem.innerHTML = `
+                            <img src="${posterUrl}" alt="${movie.title_english} poster" class="movie-poster" onerror="this.onerror=null;this.src='https://placehold.co/80x120/3182ce/ffffff?text=No+Poster';">
+                            <div class="movie-details">
+                                <div class="movie-title">${movie.title_english}</div>
+                                <div class="movie-year">Year: ${movie.year}</div>
+                                <div class="action-buttons">
+                                    ${movie.torrents && movie.torrents.length > 0 ?
+                                        `<button class="fetch-server-button" data-magnet-link="${movie.torrents[0].url}" data-source="yts" data-content-type="movie">Fetch Plunder (${movie.torrents[0].quality})</button>` :
+                                        `<p class="text-sm text-red-400">No torrents available</p>`
+                                    }
+                                </div>
+                            </div>
+                        `;
+                        movieResultsDiv.appendChild(movieItem);
+                    });
+
+                    document.querySelectorAll('.fetch-server-button').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const magnetLink = event.target.dataset.magnetLink;
+                            const source = event.target.dataset.source;
+                            const contentType = event.target.dataset.contentType;
+                            sendMagnetToServer(magnetLink, source, null, contentType);
+                        });
+                    });
+
+                } else {
+                    noResultsMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                loadingMessage.classList.add('hidden');
+                noResultsMessage.classList.remove('hidden');
+                console.error('Error fetching data from YTS.mx API:', error);
+            }
+        }
+
+        async function searchTVShows() {
+            movieResultsDiv.innerHTML = '';
+            resultsContainer.classList.add('hidden');
+            loadingMessage.classList.add('hidden');
+            noResultsMessage.classList.add('hidden');
+            serverResponseMessage.classList.add('hidden');
+        }
+
+
+        async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType) {
+            const fetchTorrentMetadataUrl = backendUrlInput.value.trim();
+            const scrapeMagnetUrl = scrapeMagnetBackendUrlInput.value.trim();
+
+            if (!fetchTorrentMetadataUrl || !scrapeMagnetUrl) {
+                showMessage("Backend server URLs are not configured. Please check the app's source code.", 'error');
+                return;
+            }
+
+            // Show success message immediately upon click
+            showMessage("Yer bounty will be deposited to the vault shortly!", 'success');
+
+            let finalMagnetLink = magnetLink;
+
+            if (source === '1337x' && detailPageUrl) {
+                try {
+                    const response = await fetch(scrapeMagnetUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ detail_page_url: detailPageUrl })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: 'Server responded with an error, but no JSON message.' }));
+                        throw new Error(`Failed to scrape magnet from 1337x: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const scrapeResult = await response.json();
+                    if (scrapeResult.status === 'ok' && scrapeResult.magnet_url) {
+                        finalMagnetLink = scrapeResult.magnet_url;
+                    } else {
+                        throw new Error(`Magnet link not found for 1337x torrent.`);
+                    }
+
+                } catch (error) {
+                    console.error('Error in 1337x magnet scraping step:', error);
+                    showMessage(`Failed to get 1337x magnet: ${error.message}`, 'error');
+                    return;
+                }
+            }
+
+            if (!finalMagnetLink) {
+                showMessage("No magnet link available to fetch.", 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(fetchTorrentMetadataUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ magnet_link: finalMagnetLink, contentType: contentType })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Server responded with an error, but no JSON message.' }));
+                    throw new Error(`Server error (${response.status}): ${errorData.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+            } catch (error) {
+                console.error('Error sending magnet link to backend:', error);
+                showMessage(`Failed to connect to your server or server error: ${error.message}. Ensure your backend is running and the ngrok URL is correct.`, 'error');
+            }
+        }
+
+        // Event listeners for Enter key on both search inputs
+        movieSearchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchMovies();
+            }
+        });
+
+        tvShowSearchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            }
+        });
+
+        // Initially hide both search areas and show no active selector
+        // The user must make a selection first.
+    </script>
+</body>
+</html>
