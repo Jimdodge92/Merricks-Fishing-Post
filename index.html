@@ -94,7 +94,7 @@
             margin-bottom: 0; /* Remove bottom margin from input in flex context */
             padding: 1rem 2rem; /* Increased padding for bigger size */
             font-size: 1.1rem; /* Slightly larger font size */
-            background-color: #10b981; /* Ensure green background */
+            background-color: #10b981; /* This is for the "Go Fishing" button */
         }
         .banner-image { /* New style for the banner */
             width: 100%; /* Full width of its container */
@@ -140,8 +140,9 @@
             color: #cbd5e1; /* Lighter grey for subtext */
             margin-top: 0.2rem; /* Small margin above subtext */
         }
+        /* General button styling (apply to all buttons unless overridden) */
         button {
-            background-color: #10b981; /* Emerald green button */
+            background-color: #10b981; /* Emerald green default for general buttons */
             color: white;
             padding: 0.75rem 1.5rem;
             border: none;
@@ -173,94 +174,20 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             text-align: left;
             border: 1px solid #334155; /* Subtle border */
+            margin-top: 2rem; /* Space above results */
         }
-        .movie-item, .tvshow-item { /* Combined styling for results */
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #475569; /* Separator */
-        }
-        .movie-item:last-child, .tvshow-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        .movie-poster, .tvshow-poster { /* Combined styling for posters */
-            width: 80px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        .movie-details, .tvshow-details { /* Combined styling for details */
-            flex-grow: 1;
-        }
-        .movie-title, .tvshow-title { /* Combined styling for titles */
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #f59e0b; /* Golden title */
-            margin-bottom: 0.25rem;
-        }
-        .movie-year, .tvshow-season-episode { /* Combined styling for year/season-episode */
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 0.5rem;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .fetch-server-button {
-            background-color: #d97706; /* Amber/Orange for "Fetch Plunder" */
-            color: white;
-            padding: 0.5rem 1rem; /* Adjusted padding */
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-size: 0.875rem;
-            display: inline-block;
-            transition: background-color 0.2s, transform 0.1s;
-            cursor: pointer;
-            border: none;
-            flex-grow: 1;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            white-space: nowrap; /* Prevent text wrapping */
-        }
-        .fetch-server-button:hover {
-            background-color: #b45309; /* Darker amber on hover */
-            transform: translateY(-1px);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        .no-results {
-            text-align: center;
-            color: #94a3b8;
-            font-style: italic;
-        }
-        .loading-message {
-            text-align: center;
-            color: #60a5fa; /* Blue for loading */
-            font-style: italic;
-            margin-top: 1rem;
-        }
+        /* Adjusted message-box to fit within resultsContainer and align properly */
         .message-box {
             background-color: #334155; /* Darker gray for messages */
             color: white;
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
-            margin-top: 1rem;
+            margin-bottom: 1rem; /* Space below the message box */
             text-align: center;
             font-size: 0.9rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: block; /* Ensure it's block-level for visibility */
-            width: 90%; /* Match container width */
-            max-width: 600px; /* Match container max-width */
+            display: block;
+            width: calc(100% - 2rem); /* Take full width minus padding of parent */
             margin-left: auto; /* Center it */
             margin-right: auto; /* Center it */
         }
@@ -285,6 +212,31 @@
             object-fit: contain;
             flex-shrink: 0; /* Prevent poles from shrinking */
             /* Removed specific margin-left/right as gap handles spacing */
+        }
+
+        /* Styling for the "Fetch Plunder" button */
+        .fetch-server-button {
+            background-color: #f97316; /* Bright Orange for "Fetch Plunder" */
+            color: white;
+            padding: 0.5rem 1rem; /* Adjusted padding */
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-block;
+            transition: background-color 0.2s, transform 0.1s;
+            cursor: pointer;
+            border: none;
+            flex-grow: 1;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        .fetch-server-button:hover {
+            background-color: #ea580c; /* Darker orange on hover */
+            transform: translateY(-1px);
+        }
+        .fetch-server-button:active {
+            transform: translateY(0);
         }
 
         /* Responsive adjustments */
@@ -325,9 +277,6 @@
     </style>
 </head>
 <body>
-    <!-- Server response message box, positioned globally -->
-    <div id="serverResponseMessage" class="message-box hidden"></div>
-
     <div class="container">
         <!-- Athena's Fortune Banner -->
         <img src="Athenas Fortune Banner Vol 6.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
@@ -370,7 +319,10 @@
         </div>
     </div>
 
+    <!-- Results Container -->
     <div id="resultsContainer" class="hidden">
+        <!-- Moved serverResponseMessage here -->
+        <div id="serverResponseMessage" class="message-box hidden"></div>
         <h2 class="text-xl font-bold mb-4">Reeled In...</h2>
         <div id="movieResults">
             <!-- Movie/TV Show results will be injected here -->
@@ -381,9 +333,9 @@
 
     <div style="display:none;">
         <!-- IMPORTANT: You need to set these URLs for the app to function correctly. -->
-        <input type="url" id="backendUrlInput" value="">
-        <input type="url" id="eztvBackendUrlInput" value="">
-        <input type="url" id="scrapeMagnetBackendUrlInput" value="">
+        <input type="url" id="backendUrlInput" value="https://c9399bcd2a08.ngrok-free.app/fetch-torrent-metadata">
+        <input type="url" id="eztvBackendUrlInput" value="https://c9399bcd2a08.ngrok-free.app/search-1337x-tv">
+        <input type="url" id="scrapeMagnetBackendUrlInput" value="https://c9399bcd2a08.ngrok-free.app/scrape-1337x-magnet">
     </div>
 
     <script>
@@ -394,7 +346,7 @@
         const backendUrlInput = document.getElementById('backendUrlInput');
         const eztvBackendUrlInput = document.getElementById('eztvBackendUrlInput');
         const scrapeMagnetBackendUrlInput = document.getElementById('scrapeMagnetBackendUrlInput');
-        const serverResponseMessage = document.getElementById('serverResponseMessage');
+        const serverResponseMessage = document.getElementById('serverResponseMessage'); // Still reference it
 
         const movieSearchArea = document.getElementById('movieSearchArea');
         const tvShowSearchArea = document.getElementById('tvShowSearchArea');
@@ -463,11 +415,10 @@
             resultsContainer.classList.add('hidden');
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
-            serverResponseMessage.classList.add('hidden');
+            serverResponseMessage.classList.add('hidden'); // Ensure message is hidden before new search
 
             if (!query) {
                 console.log("Movie search query cannot be empty.");
-                // Optionally show a message to the user here, e.g., showMessage("Please enter a movie title.", "info");
                 return;
             }
 
@@ -500,7 +451,7 @@
                                 <div class="action-buttons">
                                     ${movie.torrents && movie.torrents.length > 0 ?
                                         // Display "Fetch Plunder" button if torrents exist
-                                        `<button class="fetch-server-button" data-magnet-link="${movie.torrents[0].url}" data-source="yts" data-content-type="movie">Fetch Plunder (${movie.torrents[0].quality})</button>` :
+                                        `<button class="fetch-server-button" data-magnet-link="${movie.torrents[0].url}" data-source="yts" data-content-type="movie" data-title="${movie.title_english}">Fetch Plunder (${movie.torrents[0].quality})</button>` :
                                         // Display message if no torrents
                                         `<p class="text-sm text-red-400">No torrents available</p>`
                                     }
@@ -516,7 +467,8 @@
                             const magnetLink = event.target.dataset.magnetLink;
                             const source = event.target.dataset.source;
                             const contentType = event.target.dataset.contentType;
-                            sendMagnetToServer(magnetLink, source, null, contentType); // Pass null for detailPageUrl for YTS
+                            const title = event.target.dataset.title; // Get the title for display
+                            sendMagnetToServer(magnetLink, source, null, contentType, title);
                         });
                     });
 
@@ -535,25 +487,22 @@
          * Placeholder function for TV show search. Currently displays a sabotage message.
          */
         async function searchTVShows() {
-            // Clear previous results and hide all messages
-            movieResultsDiv.innerHTML = ''; // Re-using movieResultsDiv for TV shows too
+            movieResultsDiv.innerHTML = '';
             resultsContainer.classList.add('hidden');
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden');
-            // The sabotage message is already displayed in the HTML for tvShowSearchArea
         }
-
 
         /**
          * Sends a magnet link (and optionally a detail page URL for scraping) to the backend server.
-         * Displays success or error messages based on the server's response.
          * @param {string} magnetLink - The magnet link to send.
          * @param {string} source - The source of the torrent (e.g., 'yts', '1337x').
          * @param {string|null} detailPageUrl - Optional URL for scraping magnet link from 1337x.
          * @param {string} contentType - The type of content ('movie' or 'tvshow').
+         * @param {string} title - The title of the content for display.
          */
-        async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType) {
+        async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType, title) {
             const fetchTorrentMetadataUrl = backendUrlInput.value.trim();
             const scrapeMagnetUrl = scrapeMagnetBackendUrlInput.value.trim();
 
@@ -562,19 +511,16 @@
                 return;
             }
 
-            // Show success message immediately upon click, assuming it will be sent
+            // Show success message immediately upon click
             showMessage("Yer bounty will be deposited to the vault shortly!", 'success');
 
             let finalMagnetLink = magnetLink;
 
-            // If the source is 1337x and a detail page URL is provided, scrape the magnet link first
             if (source === '1337x' && detailPageUrl) {
                 try {
                     const response = await fetch(scrapeMagnetUrl, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ detail_page_url: detailPageUrl })
                     });
 
@@ -593,28 +539,19 @@
                 } catch (error) {
                     console.error('Error in 1337x magnet scraping step:', error);
                     showMessage(`Failed to get 1337x magnet: ${error.message}`, 'error');
-                    return; // Stop execution if scraping fails
+                    return;
                 }
             }
 
-            // If after scraping (or if not scraping), there's no final magnet link, show error
             if (!finalMagnetLink) {
                 showMessage("No magnet link available to fetch.", 'error');
                 return;
             }
 
-            // Send the final magnet link to the backend for processing
             try {
                 const response = await fetch(fetchTorrentMetadataUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        /*
-                         * IMPORTANT: The API key for the Gemini API is automatically provided
-                         * by the Canvas environment when `apiKey` is an empty string.
-                         * Do NOT add any API key validation here.
-                         */
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ magnet_link: finalMagnetLink, contentType: contentType })
                 });
 
@@ -624,8 +561,7 @@
                 }
 
                 const result = await response.json();
-                // If the server processes it successfully, the initial success message remains.
-                // If you wanted to show a different message based on server's specific success, you'd do it here.
+                // No more torrentId handling or progress tracking here
 
             } catch (error) {
                 console.error('Error sending magnet link to backend:', error);
