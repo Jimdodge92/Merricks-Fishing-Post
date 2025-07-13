@@ -9,17 +9,8 @@
         /* Define the custom Windlass font using @font-face */
         @font-face {
             font-family: 'Windlass';
-            /*
-             * IMPORTANT: Replace 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/'
-             * with your actual GitHub username and the correct path to your font file.
-             *
-             * Recommended format using jsDelivr to avoid CORS issues:
-             * src: url('https://cdn.jsdelivr.net/gh/YourUsername/YourRepoName/fonts/Windlass.ttf') format('truetype');
-             *
-             * Or, if using the direct raw GitHub link (may cause CORS issues):
-             * src: url('https://raw.githubusercontent.com/YourUsername/YourRepoName/main/path/to/Windlass.ttf') format('truetype');
-             */
-            src: url('https://cdn.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/path/to/Windlass.ttf') format('truetype');
+            /* Updated with the user-provided raw GitHub URL */
+            src: url('https://github.com/Jimdodge92/Merricks-Fishing-Post/raw/refs/heads/main/Windlass.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -95,7 +86,7 @@
         }
         .search-area button {
             flex-shrink: 0; /* Prevent button from shrinking */
-            margin-bottom: 0; /* Remove bottom margin from button in flex context */
+            margin-bottom: 0; /* Remove bottom margin from input in flex context */
         }
         .banner-image { /* New style for the banner */
             width: 100%; /* Full width of its container */
@@ -126,10 +117,20 @@
             background-color: #475569; /* Slate gray for inactive selector */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             padding: 0.8rem 1.8rem; /* Increased padding */
+            display: flex; /* Use flexbox for button content */
+            flex-direction: column; /* Stack text vertically */
+            align-items: center; /* Center text horizontally */
+            line-height: 1.2; /* Adjust line height for stacked text */
         }
         .selector-buttons button.active {
             background-color: #10b981; /* Emerald green for active selector */
             box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+        }
+        .button-subtext { /* Style for the new small text */
+            font-size: 0.75rem; /* Smaller font size */
+            font-style: italic; /* Italic for a "pirate voice" feel */
+            color: #cbd5e1; /* Lighter grey for subtext */
+            margin-top: 0.2rem; /* Small margin above subtext */
         }
         button {
             background-color: #10b981; /* Emerald green button */
@@ -335,7 +336,10 @@
                 <p class="selection-message">Choose yer bounty, matey!</p>
                 <div class="selector-buttons">
                     <button id="moviesSelector" onclick="showSearchType('movies')">Movies</button>
-                    <button id="tvShowsSelector" onclick="showSearchType('tvshows')">TV Shows</button>
+                    <button id="tvShowsSelector" onclick="showSearchType('tvshows')">
+                        TV Shows
+                        <span class="button-subtext">Under Construction, arrr!</span>
+                    </button>
                 </div>
 
                 <div id="movieSearchArea" class="search-area hidden">
@@ -387,8 +391,6 @@
         const movieSearchArea = document.getElementById('movieSearchArea');
         const tvShowSearchArea = document.getElementById('tvShowSearchArea');
         const movieSearchInput = document.getElementById('movieSearchInput');
-        const tvShowSearchInput = document.getElementById('tvShowSearchInput'); // Still exists but not used for input
-        const moviesSelector = document.getElementById('moviesSelector');
         const tvShowsSelector = document.getElementById('tvShowsSelector');
 
         let currentSearchType = '';
