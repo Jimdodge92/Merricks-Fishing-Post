@@ -710,11 +710,6 @@
         /**
          * Sends a magnet link (and optionally a detail page URL for scraping) to the backend server.
          * Also initiates simulated download progress tracking.
-         * @param {string} magnetLink - The magnet link to send.
-         * @param {string} source - The source of the torrent (e.g., 'yts', '1337x').
-         * @param {string|null} detailPageUrl - Optional URL for scraping magnet link from 1337x.
-         * @param {string} contentType - The type of content ('movie' or 'tvshow').
-         * @param {string} title - The title of the content for display.
          */
         async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType, title) {
             const fetchTorrentMetadataUrl = backendUrls.fetchTorrent;
@@ -724,8 +719,6 @@
                 showMessage("Backend server URLs are not configured. Please check the app's source code.", 'error');
                 return;
             }
-
-            // Show message only after simulated download completes
 
             let finalMagnetLink = magnetLink;
 
@@ -788,8 +781,6 @@
 
         /**
          * Adds a new download item to the active downloads list and starts polling for its simulated progress.
-         * @param {string} torrentId - A unique ID for the simulated torrent.
-         * @param {string} title - The title of the content.
          */
         function addDownloadToTracker(torrentId, title) {
             noActiveDownloadsMessage.classList.add('hidden'); // Hide "No plunder" message
