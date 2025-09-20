@@ -481,13 +481,16 @@
     </div>
 
     <script>
+        const backendUrls = {
+            fetchTorrent: "https://8c45b1b6f956.ngrok-free.app/fetch-torrent-metadata",
+            eztvSearch: "https://8c45b1b6f956.ngrok-free.app/search-1337x-tv",
+            scrapeMagnet: "https://8c45b1b6f956.ngrok-free.app/scrape-1337x-magnet",
+            recentMovies: "https://8c45b1b6f956.ngrok-free.app/api/recent-movies"
+        };
         const resultsContainer = document.getElementById('resultsContainer');
         const movieResultsDiv = document.getElementById('movieResults');
         const loadingMessage = document.getElementById('loadingMessage');
         const noResultsMessage = document.getElementById('noResultsMessage');
-        const backendUrlInput = document.getElementById('backendUrlInput');
-        const eztvBackendUrlInput = document.getElementById('eztvBackendUrlInput');
-        const scrapeMagnetBackendUrlInput = document.getElementById('scrapeMagnetBackendUrlInput');
         const serverResponseMessage = document.getElementById('serverResponseMessage'); // Still reference it
 
         const movieSearchArea = document.getElementById('movieSearchArea');
@@ -502,7 +505,6 @@
         // New elements for recent movies banner
         const recentMoviesBanner = document.getElementById('recentMoviesBanner');
         const recentMoviesLoading = document.getElementById('recentMoviesLoading');
-        const recentMoviesBackendUrlInput = document.getElementById('recentMoviesBackendUrlInput');
 
         let currentSearchType = '';
         const activeDownloadIntervals = {}; // Re-added
@@ -562,7 +564,7 @@
             recentMoviesBanner.innerHTML = ''; // Clear previous content
             recentMoviesLoading.classList.remove('hidden'); // Show loading message
 
-            const apiUrl = recentMoviesBackendUrlInput.value.trim();
+            const apiUrl = backendUrls.recentMovies;
 
             try {
                 const response = await fetch(apiUrl);
@@ -717,8 +719,8 @@
          * @param {string} title - The title of the content for display.
          */
         async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType, title) {
-            const fetchTorrentMetadataUrl = backendUrlInput.value.trim();
-            const scrapeMagnetUrl = scrapeMagnetBackendUrlInput.value.trim();
+            const fetchTorrentMetadataUrl = backendUrls.fetchTorrent;
+            const scrapeMagnetUrl = backendUrls.scrapeMagnet;
 
             if (!fetchTorrentMetadataUrl || !scrapeMagnetUrl) {
                 showMessage("Backend server URLs are not configured. Please check the app's source code.", 'error');
