@@ -290,75 +290,6 @@
             color: #94a3b8;
             margin-top: 0.25rem;
         }
-        
-        /* New styles for the recent movies banner */
-        .recent-movies-banner {
-            width: 100%;
-            overflow-x: auto; /* Enable horizontal scrolling */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-            white-space: nowrap; /* Prevent movie cards from wrapping */
-            padding: 1rem 0;
-            margin-top: 1.5rem;
-            border-radius: 0.75rem;
-            background-color: #1e293b;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.5); /* Inner shadow for depth */
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #3b82f6 #1e293b; /* For Firefox */
-        }
-        
-        /* Webkit scrollbar styles */
-        .recent-movies-banner::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .recent-movies-banner::-webkit-scrollbar-thumb {
-            background-color: #3b82f6;
-            border-radius: 10px;
-        }
-        .recent-movies-banner::-webkit-scrollbar-track {
-            background-color: #1e293b;
-            border-radius: 10px;
-        }
-        
-        .recent-movie-card {
-            display: inline-block; /* Aligns cards horizontally */
-            width: 120px; /* Fixed width for each card */
-            margin-right: 1rem;
-            text-align: center;
-            vertical-align: top;
-            transition: transform 0.2s;
-        }
-        
-        .recent-movie-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .recent-movie-card img {
-            width: 100%;
-            height: 180px; /* Fixed height for consistent look */
-            object-fit: cover;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-        
-        .recent-movie-card .title {
-            font-size: 0.875rem;
-            white-space: normal;
-            margin-top: 0.5rem;
-            line-height: 1.2;
-            height: 2.4em; /* Set a fixed height to prevent layout shifts */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-        
-        .recent-movie-card .year {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-top: 0.25rem;
-        }
 
 
         /* Responsive adjustments */
@@ -400,11 +331,15 @@
 </head>
 <body>
     <div class="container">
+        <!-- Athena's Fortune Banner -->
         <img src="https://cdn.jsdelivr.net/gh/Jimdodge92/Merricks-Fishing-Post@main/Athenas Fortune Banner Vol 6.png" alt="Athena's Fortune Banner" class="banner-image" onerror="this.onerror=null;this.src='https://placehold.co/600x150/f59e0b/ffffff?text=Athena\'s+Fortune+Banner';">
 
+        <!-- New section to frame the title and buttons with poles -->
         <div class="framed-section">
-            <img src="https://cdn.jsdelivr.net/gh/Jimdodge92/Merricks-Fishing-Post@main/Pole_left.png" alt="Left Pole" class="pole-image" onerror="this.onerror=null;this.src='https://placehold.co/50x150/0f172a/e2e8f0?text=Left+Pole';">
+            <!-- Left pole image -->
+            <img src="Pole_left.png" alt="Left Pole" class="pole-image" onerror="this.onerror=null;this.src='https://placehold.co/50x150/0f172a/e2e8f0?text=Left+Pole';">
 
+            <!-- Central content including title, selectors, search areas -->
             <div class="central-content">
                 <h1 class="text-2xl font-bold mb-4">Merrick's Fishing Post</h1>
 
@@ -422,6 +357,7 @@
                     <button onclick="searchMovies()">Go Fishing</button>
                 </div>
 
+                <!-- TV Show Search Area now only displays a message -->
                 <div id="tvShowSearchArea" class="search-area hidden">
                     <p class="sabotage-message">Sorry mate, some skelly's sabotaged the TV show search, the captain is working to repair this soon!</p>
                 </div>
@@ -431,49 +367,47 @@
                 </p>
             </div>
 
-            <img src="https://cdn.jsdelivr.net/gh/Jimdodge92/Merricks-Fishing-Post@main/Pole_right.png" alt="Right Pole" class="pole-image" onerror="this.onerror=null;this.src='https://placehold.co/50x150/0f172a/e2e8f0?text=Right+Pole';">
+            <!-- Right pole image -->
+            <img src="Pole_right.png" alt="Right Pole" class="pole-image" onerror="this.onerror=null;this.src='https://placehold.co/50x150/0f172a/e2e8f0?text=Right+Pole';">
         </div>
     </div>
 
-    <div id="recentMoviesSection" class="w-full max-w-4xl mt-8 hidden">
-        <h2 class="text-xl font-bold mb-4 text-center">Freshly Reeled In...</h2>
-        <div id="recentMoviesBanner" class="recent-movies-banner">
-            <div id="recentMoviesLoading" class="text-center w-full">Casting the net for new movies...</div>
-        </div>
-    </div>
-    
-    <div class="w-full max-w-4xl mt-4 text-center">
-        <button id="showNewReleasesButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="fetchAndDisplayRecentMovies()">Show New Releases</button>
-    </div>
-
+    <!-- Active Downloads Container - Moved here -->
     <div id="activeDownloads" class="hidden">
         <h2 class="text-xl font-bold mb-4">Active Plunder Hauls</h2>
         <p id="noActiveDownloads" class="no-results">No plunder being hauled in yet, matey!</p>
         <div id="downloadList">
-            </div>
+            <!-- Active download items will be injected here -->
+        </div>
     </div>
 
+    <!-- Results Container -->
     <div id="resultsContainer" class="hidden">
+        <!-- Moved serverResponseMessage here -->
         <div id="serverResponseMessage" class="message-box hidden"></div>
         <h2 class="text-xl font-bold mb-4">Reeled In...</h2>
         <div id="movieResults">
-            </div>
+            <!-- Movie/TV Show results will be injected here -->
+        </div>
         <p id="loadingMessage" class="loading-message hidden">Casting the net...</p>
         <p id="noResultsMessage" class="no-results hidden">No treasure found in these waters. Try a different bait!</p>
     </div>
 
+    <div style="display:none;">
+        <!-- IMPORTANT: You need to set these URLs for the app to function correctly. -->
+        <input type="url" id="backendUrlInput" value="https://692e0d568f1c.ngrok-free.app/fetch-torrent-metadata">
+        <input type="url" id="eztvBackendUrlInput" value="https://692e0d568f1c.ngrok-free.app/search-1337x-tv">
+        <input type="url" id="scrapeMagnetBackendUrlInput" value="https://692e0d568f1c.ngrok-free.app/scrape-1337x-magnet">
+    </div>
+
     <script>
-        const backendUrls = {
-            fetchTorrent: "https://66e848967ac8.ngrok-free.app/fetch-torrent-metadata",
-            eztvSearch: "https://66e848967ac8.ngrok-free.app/search-1337x-tv",
-            scrapeMagnet: "https://66e848967ac8.ngrok-free.app/scrape-1337x-magnet",
-            recentMovies: "https://66e848967ac8.ngrok-free.app/api/recent-movies",
-            movieSearch: "https://66e848967ac8.ngrok-free.app/api/search-movies"
-        };
         const resultsContainer = document.getElementById('resultsContainer');
         const movieResultsDiv = document.getElementById('movieResults');
         const loadingMessage = document.getElementById('loadingMessage');
         const noResultsMessage = document.getElementById('noResultsMessage');
+        const backendUrlInput = document.getElementById('backendUrlInput');
+        const eztvBackendUrlInput = document.getElementById('eztvBackendUrlInput');
+        const scrapeMagnetBackendUrlInput = document.getElementById('scrapeMagnetBackendUrlInput');
         const serverResponseMessage = document.getElementById('serverResponseMessage'); // Still reference it
 
         const movieSearchArea = document.getElementById('movieSearchArea');
@@ -484,11 +418,6 @@
         const activeDownloadsContainer = document.getElementById('activeDownloads'); // Re-added
         const downloadList = document.getElementById('downloadList'); // Re-added
         const noActiveDownloadsMessage = document.getElementById('noActiveDownloads'); // Re-added
-        
-        // New elements for recent movies banner
-        const recentMoviesSection = document.getElementById('recentMoviesSection');
-        const recentMoviesBanner = document.getElementById('recentMoviesBanner');
-        const recentMoviesLoading = document.getElementById('recentMoviesLoading');
 
         let currentSearchType = '';
         const activeDownloadIntervals = {}; // Re-added
@@ -496,6 +425,7 @@
         /**
          * Toggles the visibility of search areas and updates active selector buttons
          * based on the selected content type (movies or TV shows).
+         * @param {string} type - The type of content to search for ('movies' or 'tvshows').
          */
         function showSearchType(type) {
             currentSearchType = type;
@@ -505,7 +435,6 @@
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden'); // Hide any previous messages
-            recentMoviesSection.classList.add('hidden'); // Hide the banner when switching search types
 
             // Hide both search areas initially
             movieSearchArea.classList.add('hidden');
@@ -528,6 +457,8 @@
 
         /**
          * Displays a temporary message to the user.
+         * @param {string} message - The message to display.
+         * @param {string} type - The type of message ('info', 'success', 'error').
          */
         function showMessage(message, type = 'info') {
             serverResponseMessage.textContent = message;
@@ -537,53 +468,6 @@
             setTimeout(() => {
                 serverResponseMessage.classList.add('hidden');
             }, 6000);
-        }
-
-        /**
-         * Fetches the 25 most recent movies from a backend proxy and displays them in a horizontal banner.
-         */
-        async function fetchAndDisplayRecentMovies() {
-            console.log('Attempting to fetch recent movies via backend proxy...'); // New log to confirm function execution
-            
-            recentMoviesSection.classList.remove('hidden'); // Show the banner section
-            recentMoviesBanner.innerHTML = ''; // Clear previous content
-            recentMoviesLoading.classList.remove('hidden'); // Show loading message
-
-            const apiUrl = backendUrls.recentMovies;
-
-            try {
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Server responded with a ${response.status} error: ${errorText}`);
-                }
-                
-                const data = await response.json();
-                
-                recentMoviesLoading.classList.add('hidden'); // Hide loading message once data is received
-                
-                if (data.status === 'ok' && data.data && data.data.movies && data.data.movies.length > 0) {
-                    data.data.movies.forEach(movie => {
-                        const movieCard = document.createElement('div');
-                        movieCard.className = 'recent-movie-card';
-                        
-                        const posterUrl = movie.medium_cover_image || 'https://placehold.co/120x180/3182ce/ffffff?text=No+Poster';
-                        
-                        movieCard.innerHTML = `
-                            <img src="${posterUrl}" alt="${movie.title_english} poster" onerror="this.onerror=null;this.src='https://placehold.co/120x180/3182ce/ffffff?text=No+Poster';">
-                            <div class="title">${movie.title_english}</div>
-                            <div class="year">(${movie.year})</div>
-                        `;
-                        recentMoviesBanner.appendChild(movieCard);
-                    });
-                } else {
-                    recentMoviesBanner.innerHTML = '<p class="text-center">No recent movies found, matey!</p>';
-                }
-            } catch (error) {
-                console.error('Error fetching recent movies:', error);
-                recentMoviesBanner.innerHTML = `<p class="text-center text-red-400">Error fetching movies: ${error.message}. Ensure your backend proxy is running.</p>`;
-            }
         }
 
         /**
@@ -599,7 +483,6 @@
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden'); // Ensure message is hidden before new search
-            recentMoviesSection.classList.add('hidden'); // Hide the banner when searching
 
             if (!query) {
                 console.log("Movie search query cannot be empty.");
@@ -611,7 +494,7 @@
 
             try {
                 // Construct the API URL for YTS.mx
-                const apiUrl = `${backendUrls.movieSearch}?query=${query}`;
+                const apiUrl = `https://yts.mx/api/v2/list_movies.json?query_term=${query}&limit=15&sort_by=seeds&order_by=desc`; // Changed limit to 15
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
@@ -701,15 +584,22 @@
         /**
          * Sends a magnet link (and optionally a detail page URL for scraping) to the backend server.
          * Also initiates simulated download progress tracking.
+         * @param {string} magnetLink - The magnet link to send.
+         * @param {string} source - The source of the torrent (e.g., 'yts', '1337x').
+         * @param {string|null} detailPageUrl - Optional URL for scraping magnet link from 1337x.
+         * @param {string} contentType - The type of content ('movie' or 'tvshow').
+         * @param {string} title - The title of the content for display.
          */
         async function sendMagnetToServer(magnetLink, source, detailPageUrl = null, contentType, title) {
-            const fetchTorrentMetadataUrl = backendUrls.fetchTorrent;
-            const scrapeMagnetUrl = backendUrls.scrapeMagnet;
+            const fetchTorrentMetadataUrl = backendUrlInput.value.trim();
+            const scrapeMagnetUrl = scrapeMagnetBackendUrlInput.value.trim();
 
             if (!fetchTorrentMetadataUrl || !scrapeMagnetUrl) {
                 showMessage("Backend server URLs are not configured. Please check the app's source code.", 'error');
                 return;
             }
+
+            // Show message only after simulated download completes
 
             let finalMagnetLink = magnetLink;
 
@@ -772,6 +662,8 @@
 
         /**
          * Adds a new download item to the active downloads list and starts polling for its simulated progress.
+         * @param {string} torrentId - A unique ID for the simulated torrent.
+         * @param {string} title - The title of the content.
          */
         function addDownloadToTracker(torrentId, title) {
             noActiveDownloadsMessage.classList.add('hidden'); // Hide "No plunder" message
@@ -805,6 +697,8 @@
 
         /**
          * Starts a polling interval for a specific download to update its simulated progress.
+         * @param {string} torrentId - The unique ID of the torrent.
+         * @param {HTMLElement} downloadItemElement - The DOM element representing this download.
          */
         function startPollingForProgress(torrentId, downloadItemElement) {
             let simulatedProgress = 0;
@@ -862,14 +756,11 @@
         });
 
         // Event listener for Enter key on the TV show search input (currently does nothing as per sabotage message)
-        const tvShowSearchInput = document.getElementById('tvShowSearchInput');
-        if (tvShowSearchInput) {
-            tvShowSearchInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent default form submission behavior
-                }
-            });
-        }
+        tvShowSearchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission behavior
+            }
+        });
 
         // Initially hide both search areas and show no active selector.
         // The user must make a selection first.
