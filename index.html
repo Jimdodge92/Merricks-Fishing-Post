@@ -477,6 +477,7 @@
         <input type="url" id="backendUrlInput" value="https://8c45b1b6f956.ngrok-free.app/fetch-torrent-metadata">
         <input type="url" id="eztvBackendUrlInput" value="https://8c45b1b6f956.ngrok-free.app/search-1337x-tv">
         <input type="url" id="scrapeMagnetBackendUrlInput" value="https://8c45b1b6f956.ngrok-free.app/scrape-1337x-magnet">
+        <input type="url" id="recentMoviesBackendUrlInput" value="https://8c45b1b6f956.ngrok-free.app/api/recent-movies">
     </div>
 
     <script>
@@ -501,6 +502,7 @@
         // New elements for recent movies banner
         const recentMoviesBanner = document.getElementById('recentMoviesBanner');
         const recentMoviesLoading = document.getElementById('recentMoviesLoading');
+        const recentMoviesBackendUrlInput = document.getElementById('recentMoviesBackendUrlInput');
 
         let currentSearchType = '';
         const activeDownloadIntervals = {}; // Re-added
@@ -554,158 +556,44 @@
         }
 
         /**
-         * Fetches the 25 most recent movies from the YTS.mx API and displays them in a horizontal banner.
-         * NOTE: This is a simulated implementation due to potential CORS issues with direct API calls.
-         * In a production environment, you would use a backend proxy to handle this request.
+         * Fetches the 25 most recent movies from a backend proxy and displays them in a horizontal banner.
          */
         async function fetchRecentMovies() {
             recentMoviesBanner.innerHTML = ''; // Clear previous content
             recentMoviesLoading.classList.remove('hidden'); // Show loading message
-            
-            // Simulated movie data to bypass CORS issues
-            const mockMovies = [
-                {
-                    title_english: "The Lost Treasure",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/60a5fa/ffffff?text=Lost+Treasure"
-                },
-                {
-                    title_english: "Pirate's Gambit",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/f59e0b/ffffff?text=Pirate's+Gambit"
-                },
-                {
-                    title_english: "Seadog's Revenge",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/10b981/ffffff?text=Seadog's+Revenge"
-                },
-                {
-                    title_english: "The Kraken's Call",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/ef4444/ffffff?text=Kraken's+Call"
-                },
-                {
-                    title_english: "Ghost of the Abyss",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/475569/ffffff?text=Ghost+Abyss"
-                },
-                {
-                    title_english: "Cursed Tides",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/dc2626/ffffff?text=Cursed+Tides"
-                },
-                {
-                    title_english: "Island of Secrets",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/3b82f6/ffffff?text=Island+Secrets"
-                },
-                {
-                    title_english: "Siren's Song",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/1e293b/ffffff?text=Siren's+Song"
-                },
-                {
-                    title_english: "The Sunken City",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/6366f1/ffffff?text=Sunken+City"
-                },
-                {
-                    title_english: "Rogue Wave",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/f97316/ffffff?text=Rogue+Wave"
-                },
-                {
-                    title_english: "Stormbringer",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/22c55e/ffffff?text=Stormbringer"
-                },
-                {
-                    title_english: "Deep Sea Hunters",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/334155/ffffff?text=Deep+Sea+Hunters"
-                },
-                {
-                    title_english: "The Coral Key",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/0f172a/ffffff?text=Coral+Key"
-                },
-                {
-                    title_english: "Buccaneer's Legacy",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/f59e0b/ffffff?text=Buccaneer's+Legacy"
-                },
-                {
-                    title_english: "The Black Pearl",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/94a3b8/ffffff?text=Black+Pearl"
-                },
-                {
-                    title_english: "Crimson Tide",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/14b8a6/ffffff?text=Crimson+Tide"
-                },
-                {
-                    title_english: "Vast Ocean",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/f97316/ffffff?text=Vast+Ocean"
-                },
-                {
-                    title_english: "Davy Jones' Locker",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/1d4ed8/ffffff?text=Davy+Jones'+Locker"
-                },
-                {
-                    title_english: "The Maelstrom",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/f59e0b/ffffff?text=The+Maelstrom"
-                },
-                {
-                    title_english: "Treasures of the Sea",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/60a5fa/ffffff?text=Treasures+of+the+Sea"
-                },
-                {
-                    title_english: "The Admiral's Daughter",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/10b981/ffffff?text=Admiral's+Daughter"
-                },
-                {
-                    title_english: "Mutiny on the High Seas",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/ef4444/ffffff?text=Mutiny"
-                },
-                {
-                    title_english: "Legend of the Compass",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/475569/ffffff?text=Legend+Compass"
-                },
-                {
-                    title_english: "The Great Voyage",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/3b82f6/ffffff?text=Great+Voyage"
-                },
-                {
-                    title_english: "Sunken Gold",
-                    year: 2024,
-                    medium_cover_image: "https://placehold.co/120x180/1e293b/ffffff?text=Sunken+Gold"
-                }
-            ];
 
-            recentMoviesLoading.classList.add('hidden'); // Hide loading message
-            
-            mockMovies.forEach(movie => {
-                const movieCard = document.createElement('div');
-                movieCard.className = 'recent-movie-card';
+            const apiUrl = recentMoviesBackendUrlInput.value.trim();
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`Server responded with a ${response.status} error.`);
+                }
+                const data = await response.json();
                 
-                const posterUrl = movie.medium_cover_image;
+                recentMoviesLoading.classList.add('hidden'); // Hide loading message
                 
-                movieCard.innerHTML = `
-                    <img src="${posterUrl}" alt="${movie.title_english} poster">
-                    <div class="title">${movie.title_english}</div>
-                    <div class="year">(${movie.year})</div>
-                `;
-                recentMoviesBanner.appendChild(movieCard);
-            });
+                if (data.status === 'ok' && data.data && data.data.movies && data.data.movies.length > 0) {
+                    data.data.movies.forEach(movie => {
+                        const movieCard = document.createElement('div');
+                        movieCard.className = 'recent-movie-card';
+                        
+                        const posterUrl = movie.medium_cover_image || 'https://placehold.co/120x180/3182ce/ffffff?text=No+Poster';
+                        
+                        movieCard.innerHTML = `
+                            <img src="${posterUrl}" alt="${movie.title_english} poster" onerror="this.onerror=null;this.src='https://placehold.co/120x180/3182ce/ffffff?text=No+Poster';">
+                            <div class="title">${movie.title_english}</div>
+                            <div class="year">(${movie.year})</div>
+                        `;
+                        recentMoviesBanner.appendChild(movieCard);
+                    });
+                } else {
+                    recentMoviesBanner.innerHTML = '<p class="text-center">No recent movies found, matey!</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching recent movies:', error);
+                recentMoviesBanner.innerHTML = `<p class="text-center text-red-400">Error fetching movies: ${error.message}. Ensure your backend proxy is running.</p>`;
+            }
         }
 
         /**
