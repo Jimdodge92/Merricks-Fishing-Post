@@ -442,12 +442,16 @@
     </div>
 
     <!-- New: Recent Movies Banner -->
-    <div id="recentMoviesSection" class="w-full max-w-4xl mt-8">
+    <div id="recentMoviesSection" class="w-full max-w-4xl mt-8 hidden">
         <h2 class="text-xl font-bold mb-4 text-center">Freshly Reeled In...</h2>
         <div id="recentMoviesBanner" class="recent-movies-banner">
             <!-- Movie cards will be dynamically added here -->
             <div id="recentMoviesLoading" class="text-center w-full">Casting the net for new movies...</div>
         </div>
+    </div>
+    
+    <div class="w-full max-w-4xl mt-4 text-center">
+        <button id="showNewReleasesButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="fetchAndDisplayRecentMovies()">Show New Releases</button>
     </div>
 
     <!-- Active Downloads Container -->
@@ -494,6 +498,7 @@
         const noActiveDownloadsMessage = document.getElementById('noActiveDownloads'); // Re-added
         
         // New elements for recent movies banner
+        const recentMoviesSection = document.getElementById('recentMoviesSection');
         const recentMoviesBanner = document.getElementById('recentMoviesBanner');
         const recentMoviesLoading = document.getElementById('recentMoviesLoading');
 
@@ -503,7 +508,6 @@
         /**
          * Toggles the visibility of search areas and updates active selector buttons
          * based on the selected content type (movies or TV shows).
-         * @param {string} type - The type of content to search for ('movies' or 'tvshows').
          */
         function showSearchType(type) {
             currentSearchType = type;
@@ -513,6 +517,7 @@
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden'); // Hide any previous messages
+            recentMoviesSection.classList.add('hidden'); // Hide the banner when switching search types
 
             // Hide both search areas initially
             movieSearchArea.classList.add('hidden');
@@ -535,8 +540,6 @@
 
         /**
          * Displays a temporary message to the user.
-         * @param {string} message - The message to display.
-         * @param {string} type - The type of message ('info', 'success', 'error').
          */
         function showMessage(message, type = 'info') {
             serverResponseMessage.textContent = message;
@@ -551,8 +554,10 @@
         /**
          * Fetches the 25 most recent movies from a backend proxy and displays them in a horizontal banner.
          */
-        async function fetchRecentMovies() {
+        async function fetchAndDisplayRecentMovies() {
             console.log('Attempting to fetch recent movies...'); // New log to confirm function execution
+            
+            recentMoviesSection.classList.remove('hidden'); // Show the banner section
             recentMoviesBanner.innerHTML = ''; // Clear previous content
             recentMoviesLoading.classList.remove('hidden'); // Show loading message
 
@@ -603,6 +608,7 @@
             loadingMessage.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
             serverResponseMessage.classList.add('hidden'); // Ensure message is hidden before new search
+            recentMoviesSection.classList.add('hidden'); // Hide the banner when searching
 
             if (!query) {
                 console.log("Movie search query cannot be empty.");
@@ -817,8 +823,6 @@
 
         /**
          * Starts a polling interval for a specific download to update its simulated progress.
-         * @param {string} torrentId - The unique ID of the torrent.
-         * @param {HTMLElement} downloadItemElement - The DOM element representing this download.
          */
         function startPollingForProgress(torrentId, downloadItemElement) {
             let simulatedProgress = 0;
@@ -892,7 +896,6 @@
                 activeDownloadsContainer.classList.add('hidden');
                 noActiveDownloadsMessage.classList.remove('hidden');
             }
-            fetchRecentMovies(); // Call the new function to load recent movies on page load
         });
     </script>
 </body>
