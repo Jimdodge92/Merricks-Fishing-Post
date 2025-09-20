@@ -473,10 +473,10 @@
 
     <script>
         const backendUrls = {
-            fetchTorrent: "https://7dd822beafb8.ngrok-free.app/fetch-torrent-metadata",
-            eztvSearch: "https://7dd822beafb8.ngrok-free.app/search-1337x-tv",
-            scrapeMagnet: "https://7dd822beafb8.ngrok-free.app/scrape-1337x-magnet",
-            recentMovies: "https://7dd822beafb8.ngrok-free.app/api/recent-movies"
+            fetchTorrent: "https://8c45b1b6f956.ngrok-free.app/fetch-torrent-metadata",
+            eztvSearch: "https://8c45b1b6f956.ngrok-free.app/search-1337x-tv",
+            scrapeMagnet: "https://8c45b1b6f956.ngrok-free.app/scrape-1337x-magnet",
+            recentMovies: "https://8c45b1b6f956.ngrok-free.app/api/recent-movies"
         };
         const resultsContainer = document.getElementById('resultsContainer');
         const movieResultsDiv = document.getElementById('movieResults');
@@ -552,6 +552,7 @@
          * Fetches the 25 most recent movies from a backend proxy and displays them in a horizontal banner.
          */
         async function fetchRecentMovies() {
+            console.log('Attempting to fetch recent movies...'); // New log to confirm function execution
             recentMoviesBanner.innerHTML = ''; // Clear previous content
             recentMoviesLoading.classList.remove('hidden'); // Show loading message
 
