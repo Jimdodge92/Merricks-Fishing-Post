@@ -121,6 +121,15 @@
             justify-content: center;
             flex-wrap: wrap;
         }
+        .selector-buttons button {
+            background-color: #475569; /* Slate gray for inactive selector */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 0.8rem 1.8rem; /* Increased padding */
+            display: flex; /* Use flexbox for button content */
+            flex-direction: column; /* Stack text vertically */
+            align-items: center; /* Center text horizontally */
+            line-height: 1.2; /* Adjust line height for stacked text */
+        }
         .selector-buttons button.active {
             background-color: #10b981; /* Emerald green for active selector */
             box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
